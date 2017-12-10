@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
+using Fungus;
 
 public class Prolog2_2 : MonoBehaviour
 {
@@ -17,18 +18,18 @@ public class Prolog2_2 : MonoBehaviour
 
     public Transform tigerPos;
     public GameObject tiger;
-    
+
+    public Reward reward;
 
 
-
-    public GameObject dialog;
+    public Flowchart dialog;
 
 
 
 
     void Start()
     {
-
+        reward = GetComponent<Reward>();
         timeline = GetComponent<PlayableDirector>();
 
     }
@@ -36,11 +37,16 @@ public class Prolog2_2 : MonoBehaviour
     {
         UIManager.instance.questInfoCompleteButton.onClick.AddListener(() => {
 
-            dialog.SetActive(true);
+            dialog.ExecuteBlock("Prolog2_2");
 
             Invoke("EventOn", 1f);
-            
+
+            Debug.Log("ok");
+
             SetStartPos.instance.EventStartPos(character, characterPos);
+
+            reward.RewardItem();
+
 
 
         });

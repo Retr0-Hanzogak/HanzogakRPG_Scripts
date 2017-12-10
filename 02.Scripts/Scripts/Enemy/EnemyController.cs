@@ -11,6 +11,8 @@ public class EnemyController : MonoBehaviour {
     private Animator animator;
 
     bool attackDelayCheck = true;
+    bool detectAble = false;
+    float chaseTime;
     float attackDelay = 1.5f;
     float senceRange = 10f;
     float attackRange = 3f;
@@ -35,8 +37,12 @@ public class EnemyController : MonoBehaviour {
         agent = GetComponent<NavMeshAgent>();
         InvokeRepeating("UpdateTarget", 0f, 0.5f);
         eh = GetComponent<EnemyHealth>();
-        originPos = transform.position;
         
+    }
+
+    private void OnEnable()
+    {
+        originPos = transform.position;
     }
 
     IEnumerator Attack()
@@ -69,6 +75,7 @@ public class EnemyController : MonoBehaviour {
 
         if (distance < attackRange)
         {
+            detectAble = true;
             agent.isStopped = true;
 
             transform.LookAt(player);
@@ -97,6 +104,8 @@ public class EnemyController : MonoBehaviour {
 
         if (distance < senceRange && distance >= attackRange)
         {
+            detectAble = true;
+
             agent.isStopped = false;
 
             transform.LookAt(player);
@@ -105,7 +114,16 @@ public class EnemyController : MonoBehaviour {
         }
         else if (distance >= senceRange)
         {
-            agent.SetDestination(originPos);
+            agent.isStopped = false;
+            if (detectAble)
+            {
+                chaseTime = Time.time;
+                detectAble = false;
+            }
+            if (Time.time >= (chaseTime + 3f))
+            {
+                agent.SetDestination(originPos);
+            }
         }
 
 

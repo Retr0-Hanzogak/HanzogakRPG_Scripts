@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Fungus;
 public class Prolog5_2 : MonoBehaviour {
 
     public List<GameObject> character = new List<GameObject>();
@@ -9,7 +9,9 @@ public class Prolog5_2 : MonoBehaviour {
 
     public List<Transform> recharacterPos = new List<Transform>();
 
-    public GameObject dialog;
+    public Flowchart dialog;
+
+    public GameObject house;
 
     void SetPos()
     {
@@ -20,9 +22,11 @@ public class Prolog5_2 : MonoBehaviour {
     {
         
 
-        if(other.tag == "Player" && QuestProgress.instance.progress == 5)
+        if(other.tag == "Player" && QuestProgress.instance.progress == 6)
         {
-            dialog.SetActive(true);
+            dialog.ExecuteBlock("Prolog5_2");
+
+            InHouse();
 
             SetPos();
 
@@ -32,5 +36,13 @@ public class Prolog5_2 : MonoBehaviour {
     void RePos()
     {
         SetStartPos.instance.EventStartPos(character, recharacterPos);
+    }
+    void InHouse()
+    {
+        house.SetActive(true);
+    }
+    void OutHouse()
+    {
+        house.SetActive(false);
     }
 }

@@ -14,7 +14,7 @@ public class MoveManager : MonoBehaviour {
     }
 
     public UserControl uc;
-    
+    public TigerMove tm;
     
     void MoveStop()
     {
@@ -26,12 +26,19 @@ public class MoveManager : MonoBehaviour {
         uc.animator.Play("EquippedIdle", 0);
 
         
+        tm.agent.enabled = false;
+
+        tm.ani.SetBool("Run", false);
+
+        tm.ani.Play("Idle", 0);
+        
 
     }
     void MoveGo()
     {
         UserControl.playerMove = true;
-        
+
+        tm.agent.enabled = true;
     }
 
     

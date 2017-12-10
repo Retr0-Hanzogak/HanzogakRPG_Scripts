@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Fungus;
 
 public class TigerNpcController : MonoBehaviour {
 
@@ -12,55 +13,72 @@ public class TigerNpcController : MonoBehaviour {
 
     public float connectDistance = 5f;
 
-   
+    public Flowchart tigerDialog;
+
+    public static bool doingQuest = false;
+
     
 
- 
 
-    public GameObject contatctDialog; // 처음 NPC와 접촉했을때 대사
-    public GameObject secondcontactDialog; //두번째 이상부터 접촉했을때 대사..or 퀘스트중 대사
-    public GameObject questEndDialog; // 퀘스트 완료후 뜨는 대사
+    
 
     void Start()
     {
         player = GameObject.Find("Player").GetComponent<Transform>();
 
+        
         foreach (int i in quests)
         {
             QuestManager.instance.LoadQuest(i);
         }
-
+        
     }
 
     public void ShowQuestInfo()
     {
-        foreach(int i in quests)
+        
+
+        foreach (int i in quests)
         {
             if (!PlayerData.finishedQuests.Contains(i) && QuestManager.instance.IsQuestAvailable(i, GameObject.Find("Player").GetComponent<PlayerController>()))
             {
+                
+
                 QuestManager.instance.ShowQuestInfo(QuestManager.instance.questDictionary[quests[i]]);
+
 
                 if (QuestManager.instance.IsQuestFinished(i))
                 {
+
                     UIManager.instance.questInfoCompleteButton.gameObject.SetActive(true);
 
                     UIManager.instance.questInfoAcceptButton.gameObject.SetActive(!PlayerData.activeQuests.ContainsKey(i));
-
-               
-
+    
                     UIManager.instance.questInfoCompleteButton.onClick.AddListener(() => {
 
                         ReceiveCompletedQuest(QuestManager.instance.questDictionary[quests[i]]);
 
+                        UIManager.instance.questAlarm.gameObject.SetActive(false);
+
                         PlayerData.activeQuests.Remove(i);
                         PlayerData.finishedQuests.Add(i);
 
+                        doingQuest = false;
 
                         UIManager.instance.questInfoCompleteButton.onClick.RemoveAllListeners();
+
                         UIManager.instance.questInfo.gameObject.SetActive(false);
 
                         
                     });
+                }
+                else if(QuestManager.instance.IsQuestFinished(i)==false && doingQuest==true)
+                {
+                    UIManager.instance.questInfo.gameObject.SetActive(false);
+
+                    tigerDialog.ExecuteBlock("Second");
+
+                   
                 }
                 
                 
@@ -68,10 +86,10 @@ public class TigerNpcController : MonoBehaviour {
             }
         }
     }
+
+
+
     
-
-
-
 
     void ReceiveCompletedQuest(Quest quest)
     {
@@ -81,8 +99,7 @@ public class TigerNpcController : MonoBehaviour {
                 foreach(var item in quest.reward.items)
                 {
                     print("You get : (" + item.amount + ")x" + ItemDataBase.items[item.id]);
-
-                    //아이템 주기
+                                
                 }
             }
     }
@@ -112,9 +129,9 @@ public class TigerNpcController : MonoBehaviour {
             PlayerController.main.contactPlayer = false;
         }
     }
+
+
    
-
-
 
 
 

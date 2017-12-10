@@ -18,14 +18,11 @@ public class NormalTarget : MonoBehaviour {
     }
     void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "NPC" || other.tag == "Level") return;
+       if(other.tag == "Enemy")
+        {
+            targetList.Add(other);
+        }
      
-           targetList.Add(other);
-
-     
-
-        
-
 
     }
     

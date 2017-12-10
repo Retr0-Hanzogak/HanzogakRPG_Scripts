@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
-
+using Fungus;
 public class Prolog7 : MonoBehaviour {
 
-    public GameObject dialog;
+    public Flowchart dialog;
 
     public PlayableDirector timeline;
 
@@ -25,9 +25,9 @@ public class Prolog7 : MonoBehaviour {
 
             SetStartPos.instance.EventStartPos(character, characterPos);
 
-            dialog.SetActive(true);
+            dialog.ExecuteBlock("Prolog7");
 
-                     
+
         });
     }
     void EventOn()

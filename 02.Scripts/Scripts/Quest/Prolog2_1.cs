@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
+using Fungus;
 
 public class Prolog2_1 : MonoBehaviour
 {
 
     public PlayableDirector timeline;
     public GameObject monster;
-    public GameObject dialog;
+    public Flowchart dialog;
     public Transform evnetPos;
 
     public GameObject player;
@@ -34,7 +35,7 @@ public class Prolog2_1 : MonoBehaviour
             player.transform.position = evnetPos.position;
             player.transform.rotation = evnetPos.rotation;
 
-            dialog.SetActive(true);
+            dialog.ExecuteBlock("Prolog2_1");
 
             SetStartPos.instance.EventStartPos(character, characterPos);
 

@@ -29,6 +29,7 @@ public class Quest
         public float exp;
         public float money;
         public QuestItem[] items;
+        public int rewardIndex;
 
     }
     [Serializable]

@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
+using Fungus;
 
 public class Prolog2_3 : MonoBehaviour
 {
-
+    private PlayableDirector timeline;
 
     public Transform playerPos;//집안
     public Transform tigerPos;//집안
@@ -13,12 +15,17 @@ public class Prolog2_3 : MonoBehaviour
 
     public GameObject player;
     public GameObject tiger;
-    public GameObject dialog;
+    public Flowchart dialog;
+
+    private void Start()
+    {
+        timeline = GetComponent<PlayableDirector>();
+        
+    }
 
     void EvnetOnHouse()
     {
-        dialog.SetActive(true);
-        
+        dialog.ExecuteBlock("Prolog2_3");
     }
 
     void PlayerMoveInEvent()
@@ -36,5 +43,9 @@ public class Prolog2_3 : MonoBehaviour
 
         tiger.transform.position = tigerPos2.position;
         tiger.transform.rotation = tigerPos2.rotation;
+    }
+    void EventOn()//과수원으로 카메라 보내기
+    {
+        timeline.Play();
     }
 }

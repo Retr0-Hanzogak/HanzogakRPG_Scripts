@@ -12,11 +12,11 @@ public class EnemyHealth : MonoBehaviour, IDamageable
 
     public bool isDead; // 몬스터 죽었는지 판단
     bool isSinking;
-    bool damaged;
+    bool damaged = false;
     public Animator ani;
+    private Animation anim;
   
-
-    private float hitParticleTime = 0.2f;
+    
     public GameObject players;
 
 
@@ -28,24 +28,42 @@ public class EnemyHealth : MonoBehaviour, IDamageable
      void Start()
     {
         ani = GetComponent<Animator>();
+        if (ani == null)
+            anim = GetComponent<Animation>();
+
         players = GameObject.Find("Player").gameObject;
 
     }
 
     public void OnDamage(float damage) // 단순히 데미지만 입는 함수
     {
-        if(!isDead)
+        if (!isDead)
         {
             damaged = true;
 
-            ani.Play("Hit",0);
+            if(ani != null)
+            {
+                ani.Play("Hit", 0);
+            }
+            else
+            {
+                anim.CrossFade("damage");
+            }
 
             currentHealth -= damage;
 
-            StartCoroutine(PlayParticleHit());
-        }
-        
-        
+            StartCoroutine(ComboController());
+
+            ComboManager.instance.playerCombo++;
+            ComboManager.instance.ComboPlus();
+
+            
+
+            PlayParticleHit();
+
+            
+
+        }     
 
         if(currentHealth <= 0)
         {
@@ -63,13 +81,12 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     }
     
     public void StartDamage(float damage, Vector3 playerPosition, float delay, float pushBack) // 데미지를 입으면서 뒤로 넉백현상을 발동시킴
-    {
-
-        
-
+    {   
         try
         {
             OnDamage(damage);
+
+            
 
             Vector3 diff = playerPosition - transform.position;
             diff = diff / diff.sqrMagnitude;
@@ -82,14 +99,20 @@ public class EnemyHealth : MonoBehaviour, IDamageable
         }
 
     }
-
-    IEnumerator PlayParticleHit() // 임시->바꿀예정
+    
+    IEnumerator ComboController()
     {
-        hitParticle.SetActive(true);
+        ComboManager.instance.doingCombo = true;
 
-        yield return new WaitForSeconds(hitParticleTime);
+        yield return new WaitForSeconds(2.5f);
 
-        hitParticle.SetActive(false);
+        ComboManager.instance.doingCombo = false;
+    }
+
+    void PlayParticleHit() // 임시->바꿀예정
+    {
+        GameObject instanceEff = Instantiate(hitParticle, transform.position, transform.rotation);
+        Destroy(instanceEff, 1f);
     }
 
 
@@ -103,9 +126,18 @@ public class EnemyHealth : MonoBehaviour, IDamageable
  
             players.GetComponent<PlayerController>().SetExperience(expGranted);
         
+            
+        if (ani != null)
+        {
             ani.SetTrigger("Dead");
-         
-            Invoke("TurnOff", 1.5f);
+        }
+        else
+        {
+            anim.CrossFade("die");
+        }
+
+
+        Invoke("TurnOff", 1.5f);
             
             
     }

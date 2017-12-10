@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
-
+using Fungus;
 
 public class prolog3 : MonoBehaviour {
 
@@ -10,8 +10,8 @@ public class prolog3 : MonoBehaviour {
     public List<Transform> characterPos = new List<Transform>();
 
     PlayableDirector timeline;
-    public GameObject dialog;
-    public GameObject dialog2;
+    public Flowchart dialog;
+    public Flowchart dialog2;
 
     private void Start()
     {
@@ -26,7 +26,7 @@ public class prolog3 : MonoBehaviour {
         {
             EventOn();
 
-            dialog.SetActive(true);
+            dialog.ExecuteBlock("Prolog3");
 
             QuestProgress.instance.progress++;
         }
@@ -45,7 +45,7 @@ public class prolog3 : MonoBehaviour {
     {
         UIManager.instance.questInfoCompleteButton.onClick.AddListener(() => {
 
-            dialog2.SetActive(true);
+            dialog2.ExecuteBlock("Prolog4");
 
 
         });

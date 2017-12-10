@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     public static PlayerController main;
 
     public UserControl uc;
+    public ItemPickUp itemPickUp;
 
     Rigidbody rb;
 
@@ -23,6 +24,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     public int level = 1;
     public Text levelText;
     public float experience { get; private set; }
+    
 
     public Transform experienceBar;
     public Transform healthBar;
@@ -33,11 +35,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     float totalHealth = 150;
     public float currentHealth = 0;
-
     public bool dead;
-
     public Animator animator;
-
 
     public bool isEquipped;
     public bool isWalking;
@@ -73,7 +72,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 
         
-
+        
     }
 
 
@@ -181,7 +180,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         experienceBar.GetComponent<Image>().fillAmount = (experience - previousExperience) / (experienceNeeded - previousExperience);
     }
 
-    void SetHealth(float health)
+    public void SetHealth(float health)
     {
         if (health > totalHealth) currentHealth = totalHealth;
         else if (health <= 0)
@@ -195,19 +194,19 @@ public class PlayerController : MonoBehaviour, IDamageable
     }
     public void OnDamage(float damage)
     {
-        if (dead) return;
-
-        
+        if (dead) return;    
 
         if (!isHit)
         {
             uc.h = 0;
             uc.v = 0;
+
             animator.Play("Hit", 0);
         }
 
         SetHealth(currentHealth - damage);
 
+        
         
     }
      void OnTriggerEnter(Collider other)
@@ -236,9 +235,7 @@ public class PlayerController : MonoBehaviour, IDamageable
             GameObject rabbit = rig.transform.parent.gameObject;
 
             EnemyController enemyController = rabbit.GetComponent<EnemyController>();
-
-
-
+       
             enemyController.isAttack = false;
 
         }
@@ -268,18 +265,27 @@ public class PlayerController : MonoBehaviour, IDamageable
         {
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
             if (Physics.Raycast(ray, out hit, Mathf.Infinity))
             {
                 //Check if is an NPC
                 TigerNpcController tigerNpcController = hit.transform.GetComponent<TigerNpcController>();
+                itemPickUp = hit.transform.GetComponent<ItemPickUp>();
+           
                 if (tigerNpcController != null && PlayerController.main.contactPlayer == true)
                 {
                     tigerNpcController.ShowQuestInfo();
                     
                     return;
                 }
-            }
+                if(itemPickUp != null && itemPickUp.contactPlayer)
+                {
+                    itemPickUp.PickUp();
 
+                    return;
+                }
+            }
+            
 
         }
 

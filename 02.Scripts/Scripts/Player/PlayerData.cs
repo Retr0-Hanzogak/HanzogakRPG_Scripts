@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+
+
 public static class PlayerData
 {
 
@@ -16,7 +18,7 @@ public static class PlayerData
 
     public static Dictionary<int, Destination> getDestination = new Dictionary<int, Destination>();
 
-    public static Dictionary<int, Item> playerItem = new Dictionary<int, Item>();
+    public static Dictionary<int,Item > playerItem = new Dictionary<int, Item>();
 
     public static void AddQuest(int id)
     {
@@ -40,12 +42,12 @@ public static class PlayerData
                 newActiveQuests.kills[questKill.id].initialAmount = monsterKilled[questKill.id].amount;
             }
         }
-        
+
         if (quest.task.contacts.Length > 0)
         {
             newActiveQuests.contacts = new Quest.QuestContact[quest.task.contacts.Length];
 
-            foreach(Quest.QuestContact questContact in quest.task.contacts)
+            foreach (Quest.QuestContact questContact in quest.task.contacts)
             {
                 newActiveQuests.contacts[questContact.id] = new Quest.QuestContact();
 
@@ -53,10 +55,10 @@ public static class PlayerData
 
                 newActiveQuests.contacts[questContact.id].initialAmount = npcContacted[questContact.id].amount;
 
-                
+
             }
         }
-        
+
         if (quest.task.locations.Length > 0)
         {
             newActiveQuests.locations = new Quest.QuestLocation[quest.task.locations.Length];
@@ -69,24 +71,24 @@ public static class PlayerData
 
                 newActiveQuests.locations[questLocation.id].initialAmount = getDestination[questLocation.id].amount;
             }
-            
 
-            
+
+
         }
-        if(quest.task.items.Length > 0)
+        if (quest.task.items.Length > 0)
         {
             newActiveQuests.items = new Quest.QuestItem[quest.task.items.Length];
 
-            foreach(Quest.QuestItem questItem in quest.task.items)
+            foreach (Quest.QuestItem questItem in quest.task.items)
             {
                 newActiveQuests.items[questItem.id] = new Quest.QuestItem();
 
-                if (!playerItem.ContainsKey(questItem.id)) playerItem.Add(questItem.id, new PlayerData.Item());
+                if (!playerItem.ContainsKey(questItem.id)) playerItem.Add(questItem.id, new Item());
 
                 newActiveQuests.items[questItem.id].initialAmount = playerItem[questItem.id].amount;
             }
         }
-        
+
         activeQuests.Add(id, newActiveQuests);
 
     }
@@ -116,9 +118,10 @@ public static class PlayerData
         public int id;
         public int amount;
     }
-    public class Item
-    {
-        public int id;
-        public int amount;
-    }
+
+
+   
 }
+
+
+

@@ -21,13 +21,21 @@ public class UIManager : MonoBehaviour {
     public Text sp_UI;
 
     public Transform playerInfo;
+    public Text playerCombo;
+    public Transform questAlarm;
 
-    
+    public Transform menu;
+    public Transform equipment;
 
+    //Equipmnet
+    public Transform head;
+    public Transform body;
+    public Transform arm;
+    public Transform leg;
+    public Transform foot;
+    public Transform weapon;
 
-
-
-
+    public Transform[] onoffUI;
      void Awake()
     {
         if (instance == null)
@@ -42,8 +50,17 @@ public class UIManager : MonoBehaviour {
         questBook = canvas.Find("QuestBook");
         questInfoCompleteButton = questInfo.Find("Background/Buttons/Complete").GetComponent<Button>();
         questInfoCancelButton = questInfo.Find("Background/Buttons/Cancel").GetComponent<Button>();
-
+        menu = GameObject.Find("Menu/MenuList").transform;
         skillBook = canvas.Find("SkillBook");
+        equipment = canvas.Find("Equipment");
+
+        head = equipment.Find("HeadSlot/Head");
+        body = equipment.Find("BodySlot/Body");
+        arm = equipment.Find("ArmSlot/Arm");
+        leg = equipment.Find("LegSlot/Leg");
+        foot = equipment.Find("FootSlot/Foot");
+        weapon = equipment.Find("WeaponSlot/Weapon");
+
         for (int i = 0; i < 10; i++)
         {
             skillLv_UI[i] = skillBook.Find("Info/Viewport/Content/Skill (" + i + ")/Text_Lv").GetComponent<Text>();
@@ -51,8 +68,14 @@ public class UIManager : MonoBehaviour {
         sp_UI = skillBook.Find("SP").GetComponent<Text>();
 
         playerInfo = canvas.Find("CharacterInfo");
+        playerCombo = canvas.Find("Combo").GetComponent<Text>();
+        
+       ActionCancel();
 
-        ActionCancel();
+        
+       
+
+
     }
     void ActionCancel()
     {
@@ -78,10 +101,17 @@ public class UIManager : MonoBehaviour {
  
     void TurnOffUI()
     {
-        playerInfo.gameObject.SetActive(false);
+     
+        for(int i = 0; i < onoffUI.Length; i++)
+        {
+            onoffUI[i].gameObject.SetActive(false);
+        }
     }
     void TurnOnUI()
     {
-        playerInfo.gameObject.SetActive(true);
+        for (int i = 0; i < onoffUI.Length; i++)
+        {
+            onoffUI[i].gameObject.SetActive(true);
+        }
     }
 }

@@ -22,9 +22,7 @@ public class QuestManager : MonoBehaviour
     {
         Quest newQuest = JsonUtility.FromJson<Quest>(Resources.Load<TextAsset>("JsonFiles/" + id.ToString("00")).text);
 
-        questDictionary.Add(newQuest.id, newQuest);
-
-      
+        questDictionary.Add(newQuest.id, newQuest);    
 
     }
   
@@ -45,6 +43,9 @@ public class QuestManager : MonoBehaviour
             UIManager.instance.questInfoAcceptButton.gameObject.SetActive(false);
             UIManager.instance.questInfo.gameObject.SetActive(false);
             ShowActiveQuests();
+            UIManager.instance.questAlarm.gameObject.SetActive(true);
+
+            TigerNpcController.doingQuest = true;
 
 
         });
@@ -131,7 +132,7 @@ public class QuestManager : MonoBehaviour
     {
         return (questDictionary[questId].requiredLevel <= player.level);
     }
-
+    
 
     public void ShowActiveQuests()
     {
@@ -236,11 +237,10 @@ public class QuestManager : MonoBehaviour
                 }
             }
         }
-      
-        
-        
 
         return true;
+
+        
     }
  
     

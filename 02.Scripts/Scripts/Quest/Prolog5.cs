@@ -1,40 +1,43 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Playables;
+using Fungus;
 
 public class Prolog5 : MonoBehaviour {
 
     public List<GameObject> character = new List<GameObject>();
     public List<Transform> characterPos = new List<Transform>();
 
-    PlayableDirector timeline;
 
-    public GameObject dialog;
 
-    private void Start()
-    {
-        timeline = GetComponent<PlayableDirector>();
-    }
+    public Flowchart dialog;
+
 
     void SetPos()
     {
         SetStartPos.instance.EventStartPos(character, characterPos);
     }
-    void EventOn()
-    {
-        timeline.Play();
-        
-    }
+   
+  
     private void OnTriggerEnter(Collider other)
     {
         if(other.tag == "Player" &&QuestProgress.instance.progress == 3)
         {
-            dialog.SetActive(true);
+            dialog.ExecuteBlock("Prolog5");
 
             QuestProgress.instance.progress++;
         }
         
+    }
+    public void GoToHouse()
+    {
+        QuestProgress.instance.goToHouse = true;
+    }
+    public void IgonreHouse()
+    {
+        QuestProgress.instance.goToHouse = false;
+
+        QuestProgress.instance.progress++;
     }
 
 }

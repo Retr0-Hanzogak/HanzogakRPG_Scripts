@@ -6,11 +6,12 @@ public class PlayerAttack : MonoBehaviour {
 
     public static PlayerAttack instance;
 
-    public float NormalDamage = 10f;
-    public float HeavyDamage = 20f;
-    public float SkillDamage = 30f;
+    public float normalDamage = 10f;
+    public float heavyDamage = 20f;
+    public float skillDamage = 30f;
     public float kickPow = 1000;
 
+    public float extraDamage = 1f; // 레벨이 올라가거나 콤보로 인한 추가 데미지를 위한 변수
     public NormalTarget normalTarget;
     public SkillTarget skillTarget;
 
@@ -33,13 +34,18 @@ public class PlayerAttack : MonoBehaviour {
             {
                 if (enemy.isDead) return;
 
-                enemy.StartDamage(NormalDamage, transform.position, 0.5f, 0.1f);    
-                
-                
+                float originDamage = normalDamage;
+
+                normalDamage = normalDamage + extraDamage * PlayerController.main.level + extraDamage * ComboManager.instance.playerCombo;
+
+                enemy.OnDamage(normalDamage);
+
+                normalDamage = originDamage;
                 
             }
         }
     }
+    /*
     public void HeaveyAttack()
     {
         List<Collider> targetList = new List<Collider>(normalTarget.targetList);
@@ -52,14 +58,14 @@ public class PlayerAttack : MonoBehaviour {
             {
                 if (enemy.isDead) return;
 
-                enemy.StartDamage(HeavyDamage, transform.position, 0.5f, 0.1f);
+                enemy.OnDamage(heavyDamage);
 
-
+                
 
             }
         }
     }
-    
+    */
     public void Denfense() // 방어 애니메이션 발동시 발동하는 함수
     {
         List<Collider> targetList = new List<Collider>(normalTarget.targetList);
@@ -85,7 +91,7 @@ public class PlayerAttack : MonoBehaviour {
             if (enemy != null)
             {
                 enemy.AddForce(Vector3.up* kickPow, ForceMode.Impulse);
-                monster.OnDamage(NormalDamage);
+                monster.OnDamage(normalDamage);
             }
             
         }
@@ -99,8 +105,10 @@ public class PlayerAttack : MonoBehaviour {
             EnemyHealth enemy = one.GetComponent<EnemyHealth>();
             if(enemy!= null)
             {
-                enemy.StartDamage(SkillDamage, transform.position, 1f, 2f);
+                enemy.StartDamage(skillDamage, transform.position, 1f, 2f);
             }
         }
     }
+    
+
 }

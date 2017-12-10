@@ -20,6 +20,7 @@ public class SetStartPos : MonoBehaviour {
         {
             gameobj[i].transform.position = gameobjPos[i].position;
             gameobj[i].transform.rotation = gameobjPos[i].rotation;
+            
         }
     }
    
